@@ -1,8 +1,12 @@
+import cron from 'cron';
 import logger from 'morgan';
-import config from './config';
 import express from 'express';
+import shell from 'python-shell'
 
+import config from './config';
 import db from './lib/database';
+
+const CronJob = cron.CronJob;
 
 const app = express();
 app.use(logger('dev'));
@@ -11,6 +15,21 @@ app.set('port', process.env.PORT || config.PORT);
 app.listen(app.get('port'), () => {
     console.log(config.APP_NAME + ' is listening on port ' + app.get('port'));
 });
+
+let options = {
+    scriptPath: __dirname + '/'
+}
+
+// cron job to update weather data once every 15 minutes
+let updateJob = new CronJob('0 */15 * * * *', () => {
+    shell.run('main.py', options, (err, reslts) => {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log('Weather data has been updated.')
+        }
+    });
+}, null, true);
 
 // GET returns all weather data on a specific date for the given stationId
 app.get('/data/:stationId/on/:day-:month-:year', (req, res) => {

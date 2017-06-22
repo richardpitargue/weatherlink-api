@@ -10,9 +10,11 @@
   "author": "jlpitargue@up.edu.ph",
   "license": "ISC",
   "dependencies": {
+    "cron": "^1.2.1",
     "express": "^4.15.2",
     "mongodb": "^2.2.26",
-    "morgan": "^1.8.1"
+    "morgan": "^1.8.1",
+    "python-shell": "^0.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
